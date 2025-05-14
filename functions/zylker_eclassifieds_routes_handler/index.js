@@ -197,8 +197,6 @@ app.delete("/crmProduct/:id", async (req, res) => {
 		const userDetails = await getUserDetails(catalystApp);
 		const accessToken = await getAccessToken(catalystApp, userDetails);
 
-		/* Temporarily commenting out Stratus delete since it's not working in the new project
-		
 		const getProduct = await axios.get(`https://www.zohoapis.com/crm/v7/Products/${req.params.id}`, {
 			headers: {
 				Authorization: `Zoho-oauthtoken ${accessToken}`
@@ -213,15 +211,17 @@ app.delete("/crmProduct/:id", async (req, res) => {
 		if (headBucketResponse) {
 			imageUrlsArray.map(async url => {
 				const parts = url.split(".com/");
-				let object = parts[1];
-				const bucket = stratus.bucket(STRATUS_BUCKET_NAME);
-				try {
-					await bucket.deleteObject(object);
-				} catch (error) {
-					console.log("error in delete object- ", error);
+				if (parts[0] != "https://zylker-products-development.zohostratus") {
+					let object = parts[1];
+					const bucket = stratus.bucket(STRATUS_BUCKET_NAME);
+					try {
+						await bucket.deleteObject(object);
+					} catch (error) {
+						console.log("error in delete object- ", error);
+					}
 				}
 			})
-		} */
+		}
 
 		const response = await axios.delete(
 			`https://www.zohoapis.com/crm/v7/Products/${req.params.id}`,
