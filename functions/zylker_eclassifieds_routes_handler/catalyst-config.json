@@ -1,0 +1,14 @@
+{
+	"deployment": {
+		"name": "zylker_eclassifieds_routes_handler",
+		"stack": "node18",
+		"type": "advancedio",
+		"env_variables": {
+			"CLIENTID" : "YOUR CLIENTID", 
+ 			"CLIENT_SECRET" : "YOUR CLIENT_SECRET"
+		}
+	},
+	"execution": {
+		"main": "index.js"
+	}
+}

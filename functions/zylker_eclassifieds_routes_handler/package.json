@@ -1,0 +1,12 @@
+{
+	"name": "zylker_eclassifieds_routes_handler",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "priyatharshini.ja+solutions@zohotest.com",
+	"dependencies": {
+		"axios": "^1.9.0",
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"zcatalyst-sdk-node": "beta"
+	}
+}

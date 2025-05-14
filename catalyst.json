@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "targets": [
+      "zylker_eclassifieds_routes_handler"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "zylker-eclassifieds-ui",
+    "plugin": "zcatalyst-cli-plugin-react"
+  }
+}
