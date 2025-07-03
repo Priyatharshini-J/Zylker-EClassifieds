@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../store";
 import { FaSave, FaTimes, FaTrash, FaUpload } from "react-icons/fa";
-import { BASE_URL, STRATUS_BUCKET_NAME } from "../constants";
+import { BASE_URL, STRATUS_BUCKET_NAME, STRATUS_BUCKET_URL } from "../constants";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 import axios from "axios";
 
@@ -111,11 +111,7 @@ const SellerProductPage = () => {
           const putObject = await bucket.putObject(`${key}/${ms}`, fileData);
           await putObject.start();
           await putObject.abort();
-          const fileUrl =
-            "https://zylker-products-development.zohostratus.com/" +
-            key +
-            "/" +
-            ms;
+          const fileUrl = `${STRATUS_BUCKET_URL}/${key}/${ms}`;
           uploadedImageUrls.push(fileUrl);
         }
         try {
