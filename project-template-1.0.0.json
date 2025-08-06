@@ -1,0 +1,216 @@
+{
+  "name" : "project-template",
+  "version" : "1.0.0",
+  "parameters" : { },
+  "components" : {
+    "Datastore" : [ {
+      "type" : "table",
+      "name" : "Token",
+      "properties" : {
+        "table_name" : "Token"
+      },
+      "dependsOn" : [ ]
+    }, {
+      "type" : "column",
+      "name" : "Token-refresh_token",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "refresh_token",
+        "data_type" : "encrypted text",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "search_index_enabled" : false,
+        "table_id" : "Token",
+        "table_name" : "Token",
+        "max_length" : 10000
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "column",
+      "name" : "Token-userId",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "userId",
+        "data_type" : "bigint",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "search_index_enabled" : false,
+        "table_id" : "Token",
+        "table_name" : "Token",
+        "max_length" : 19
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "tableScope",
+      "name" : "Token-App Administrator",
+      "properties" : {
+        "role_name" : "App Administrator",
+        "table_scope" : "GLOBAL",
+        "type" : "App Administrator",
+        "table_name" : "Token"
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "tableScope",
+      "name" : "Token-App User",
+      "properties" : {
+        "role_name" : "App User",
+        "table_scope" : "GLOBAL",
+        "type" : "App User",
+        "table_name" : "Token"
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "tablePermission",
+      "name" : "Token-App Administrator",
+      "properties" : {
+        "role_name" : "App Administrator",
+        "type" : "App Administrator",
+        "table_permissions" : [ "SELECT", "UPDATE", "INSERT", "DELETE" ],
+        "table_name" : "Token"
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "tablePermission",
+      "name" : "Token-App User",
+      "properties" : {
+        "role_name" : "App User",
+        "type" : "App User",
+        "table_permissions" : [ "SELECT", "UPDATE", "INSERT", "DELETE" ],
+        "table_name" : "Token"
+      },
+      "dependsOn" : [ "Datastore.table.Token" ]
+    }, {
+      "type" : "table",
+      "name" : "Orders",
+      "properties" : {
+        "table_name" : "Orders"
+      },
+      "dependsOn" : [ ]
+    }, {
+      "type" : "column",
+      "name" : "Orders-userId",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "userId",
+        "data_type" : "bigint",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "search_index_enabled" : false,
+        "table_id" : "Orders",
+        "table_name" : "Orders",
+        "max_length" : 19
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "column",
+      "name" : "Orders-Orders",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "Orders",
+        "data_type" : "text",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "search_index_enabled" : false,
+        "table_id" : "Orders",
+        "table_name" : "Orders",
+        "max_length" : 10000
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "column",
+      "name" : "Orders-Address",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "Address",
+        "data_type" : "text",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "search_index_enabled" : false,
+        "table_id" : "Orders",
+        "table_name" : "Orders",
+        "max_length" : 10000
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "column",
+      "name" : "Orders-Status",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 2,
+        "column_name" : "Status",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "default_value" : "Processing",
+        "table_id" : "Orders",
+        "table_name" : "Orders",
+        "data_type" : "varchar",
+        "search_index_enabled" : false,
+        "max_length" : 255
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "column",
+      "name" : "Orders-Total",
+      "properties" : {
+        "audit_consent" : false,
+        "decimal_digits" : 4,
+        "column_name" : "Total",
+        "is_unique" : false,
+        "is_mandatory" : false,
+        "default_value" : "0.0000",
+        "table_id" : "Orders",
+        "table_name" : "Orders",
+        "data_type" : "double",
+        "search_index_enabled" : false,
+        "max_length" : 15
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "tableScope",
+      "name" : "Orders-App Administrator",
+      "properties" : {
+        "role_name" : "App Administrator",
+        "table_scope" : "GLOBAL",
+        "type" : "App Administrator",
+        "table_name" : "Orders"
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "tableScope",
+      "name" : "Orders-App User",
+      "properties" : {
+        "role_name" : "App User",
+        "table_scope" : "GLOBAL",
+        "type" : "App User",
+        "table_name" : "Orders"
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "tablePermission",
+      "name" : "Orders-App Administrator",
+      "properties" : {
+        "role_name" : "App Administrator",
+        "type" : "App Administrator",
+        "table_permissions" : [ "SELECT", "UPDATE", "INSERT", "DELETE" ],
+        "table_name" : "Orders"
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    }, {
+      "type" : "tablePermission",
+      "name" : "Orders-App User",
+      "properties" : {
+        "role_name" : "App User",
+        "type" : "App User",
+        "table_permissions" : [ "SELECT", "UPDATE", "INSERT", "DELETE" ],
+        "table_name" : "Orders"
+      },
+      "dependsOn" : [ "Datastore.table.Orders" ]
+    } ]
+  }
+}
