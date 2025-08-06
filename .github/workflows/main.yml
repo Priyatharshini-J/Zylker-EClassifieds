@@ -34,6 +34,6 @@ jobs:
       - name: Generating artifacts
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./release.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
+          artifacts: "./release/release.zip"
           tag: ${{ env.RELEASE_VERSION }}
