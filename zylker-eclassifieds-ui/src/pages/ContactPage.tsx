@@ -12,7 +12,6 @@ const ContactPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    // In a real app, you would send this data to your backend
   };
 
   const handleChange = (

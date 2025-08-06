@@ -29,9 +29,11 @@ const UserMenu = ({ userName }: UserMenuProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Function to handle user logout
   const handleLogout = () => {
     var redirectURL = "/";
     var auth = (window as any).catalyst.auth;
+    // Trigger the sign-out process and redirect the user to the specified URL
     auth.signOut(redirectURL);
   };
 

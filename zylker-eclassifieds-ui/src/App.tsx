@@ -16,9 +16,11 @@ import SellerProductPage from "./pages/SellerProductPage";
 import { useEffect, useState } from "react";
 import { setUser } from "./store/slices/userSlice";
 import { User } from "./types";
-import { CLIENTID } from "./constants";
+import { CLIENTID, STRATUS_BUCKET_URL } from "./constants";
 
 function App() {
+  // Retriving DC from STRATUS_BUCKET_URL
+  const DC = STRATUS_BUCKET_URL.split(".")[2];
   const [isFetching, setIsFetching] = useState(true);
   const [showConnect, setShowConnect] = useState(false);
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
@@ -26,6 +28,7 @@ function App() {
 
   useEffect(() => {
     const Zcatalyst = (window as any).catalyst;
+    // Verify if the user is authenticated; if yes, store their details in the `user` variable
     Zcatalyst.auth
       .isUserAuthenticated()
       .then((userData: any) => {
@@ -39,7 +42,7 @@ function App() {
         };
         dispatch(setUser(user));
         setIsUserAuthenticated(true);
-
+        // Execute query to determine if the current user has a stored refresh token
         let query = `SELECT * FROM Token where Token.userId = ${userData.content.user_id}`;
         let zcql = Zcatalyst.ZCatalystQL;
         let zcqlPromise = zcql.executeQuery(query);
@@ -62,9 +65,10 @@ function App() {
   }, [dispatch]);
 
   const handleConnect = () => {
+    // Handing ZOHO CRM Connect
     setShowConnect(false);
     window.location.href =
-      `https://accounts.zoho.com/oauth/v2/auth?scope=ZohoCRM.modules.ALL&client_id=${CLIENTID}&response_type=code&access_type=offline&redirect_uri=` +
+      `https://accounts.zoho.${DC}/oauth/v2/auth?scope=ZohoCRM.modules.ALL&client_id=${CLIENTID}&response_type=code&access_type=offline&redirect_uri=` +
       window.location.protocol +
       "//" +
       window.location.host +

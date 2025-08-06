@@ -3,11 +3,16 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../store";
 import { FaSave, FaTimes, FaTrash, FaUpload } from "react-icons/fa";
-import { BASE_URL, STRATUS_BUCKET_NAME, STRATUS_BUCKET_URL } from "../constants";
+import {
+  BASE_URL,
+  STRATUS_BUCKET_NAME,
+  STRATUS_BUCKET_URL,
+} from "../constants";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 import axios from "axios";
 
 const SellerProductPage = () => {
+  const DC = STRATUS_BUCKET_URL.split(".")[2];
   const { id } = useParams();
   const navigate = useNavigate();
   const { products } = useSelector((state: RootState) => state.product);
@@ -93,113 +98,131 @@ const SellerProductPage = () => {
       images: prev.images.filter((img) => img !== imageUrl),
     }));
   };
-
+  // Function to handle product submission for both adding and editing a product
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    // Create an instance for the Stratus bucket
     const stratus = (window as any).catalyst.stratus;
     const bucket = stratus.bucket(STRATUS_BUCKET_NAME);
-    try {
-      if (id === "new") {
-        const uploadedImageUrls: string[] = [];
-        const newImages = formData.images;
+    // try {
+    //   // CASE 1: Adding a new product
+    //   if (id === "new") {
+    //     const uploadedImageUrls: string[] = [];
+    //     const newImages = formData.images;
 
-        for (let i = 0; i < newImages.length; i++) {
-          const ms = Date.now();
-          const key = formData.name;
-          const fileData = dataURLToFile(newImages[i], `image${i}.jpg`);
-          const putObject = await bucket.putObject(`${key}/${ms}`, fileData);
-          await putObject.start();
-          await putObject.abort();
-          const fileUrl = `${STRATUS_BUCKET_URL}/${key}/${ms}`;
-          uploadedImageUrls.push(fileUrl);
-        }
-        try {
-          await axios.post(
-            `${BASE_URL}/server/zylker_eclassifieds_routes_handler/crmProduct`,
-            {
-              name: formData.name,
-              code: formData.code,
-              uploadedImageUrls: uploadedImageUrls.join(","),
-              description: formData.description,
-              price: formData.price,
-            }
-          );
+    //     // Upload each image to Stratus
+    //     for (let i = 0; i < newImages.length; i++) {
+    //       const ms = Date.now(); // Unique timestamp for filename
+    //       const key = formData.name; // Folder name based on product name
+    //       const fileData = dataURLToFile(newImages[i], `image${i}.jpg`); // Convert base64 to file
+    //       // Upload the image to stratus bucket
+    //       const putObject = await bucket.putObject(`${key}/${ms}`, fileData);
+    //       await putObject.start();
+    //       await putObject.abort();
+    //       // Construct URL of uploaded image
+    //       const fileUrl = `${STRATUS_BUCKET_URL}/${key}/${ms}`;
+    //       uploadedImageUrls.push(fileUrl);
+    //     }
+    //     try {
+    //       // Send product data to backend to store in ZOHO CRM Product's module
+    //       await axios.post(
+    //         `${BASE_URL}/server/zylker_eclassifieds_routes_handler/crmProduct`,
+    //         {
+    //           name: formData.name,
+    //           code: formData.code,
+    //           uploadedImageUrls: uploadedImageUrls.join(","),
+    //           description: formData.description,
+    //           price: formData.price,
+    //         }
+    //       );
 
-          setSuccessMessage("Product added successfully !!!");
-          setShowSuccessModal(true);
-        } catch (error) {
-          setSuccessMessage("Error occured while adding the product.");
-          setShowFailureModal(true);
-          console.error("Error in Add New Product:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
-        const removedImages = originalImages.filter(
-          (img) => !formData.images.includes(img)
-        );
+    //       setSuccessMessage("Product added successfully !!!");
+    //       setShowSuccessModal(true);
+    //     } catch (error) {
+    //       setSuccessMessage("Error occured while adding the product.");
+    //       setShowFailureModal(true);
+    //       console.error("Error in Add New Product:", error);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   }
+    //   // CASE 2: Editing an existing product
+    //   else {
+    //     // Identify removed images: present in original but not in product form
+    //     const removedImages = originalImages.filter(
+    //       (img) => !formData.images.includes(img)
+    //     );
+    //     // Identify new images: present in form but not in original, and are base64
+    //     const newImages = formData.images.filter(
+    //       (img) => !originalImages.includes(img) && img.startsWith("data:")
+    //     );
+    //     // Delete removed images from Stratus
+    //     for (const url of removedImages) {
+    //       const key = url.split(`.${DC}/`)[1];
+    //       const checkObjectAvailability = await bucket.headObject(key);
+    //       if (checkObjectAvailability) await bucket.deleteObject(key);
+    //     }
 
-        const newImages = formData.images.filter(
-          (img) => !originalImages.includes(img) && img.startsWith("data:")
-        );
+    //     const uploadedImageUrls: string[] = [];
+    //     for (let i = 0; i < newImages.length; i++) {
+    //       const ms = Date.now(); // Unique timestamp for filename
+    //       const key = product?.images[0].split("/")[3]; // Extract folder name from old image URL
+    //       const fileData = dataURLToFile(newImages[i], `image${i}.jpg`);
+    //       // Upload the image to stratus bucket
+    //       const putObject = await bucket.putObject(`${key}/${ms}`, fileData);
+    //       await putObject.start();
+    //       await putObject.abort();
+    //       // Construct final URL from image prefix and file path
+    //       const fileUrl =
+    //         product?.images[0].split(`.${DC}/`)[0] + `.${DC}/` + key + "/" + ms;
+    //       uploadedImageUrls.push(fileUrl);
+    //     }
 
-        for (const url of removedImages) {
-          const key = url.split(".com/")[1];
-          const checkObjectAvailability = await bucket.headObject(key);
-          if (checkObjectAvailability) await bucket.deleteObject(key);
-        }
+    //     // Prepare final image list: keep existing (excluding removed), add new
+    //     const finalImages = originalImages
+    //       .filter((img) => !removedImages.includes(img))
+    //       .concat(uploadedImageUrls);
+    //     // Update local state with final image list
+    //     setOriginalImages(finalImages);
 
-        const uploadedImageUrls: string[] = [];
-        for (let i = 0; i < newImages.length; i++) {
-          const ms = Date.now();
-          const key = product?.images[0].split("/")[3];
-          const fileData = dataURLToFile(newImages[i], `image${i}.jpg`);
-          const putObject = await bucket.putObject(`${key}/${ms}`, fileData);
-          await putObject.start();
-          await putObject.abort();
-          const fileUrl =
-            product?.images[0].split(".com/")[0] + ".com/" + key + "/" + ms;
-          uploadedImageUrls.push(fileUrl);
-        }
+    //     try {
+    //       // Send updated product data to backend for editing in ZOHO CRM Product's module
+    //       await axios.put(
+    //         `${BASE_URL}/server/zylker_eclassifieds_routes_handler/crmProduct/${id}`,
+    //         {
+    //           Product_Name: formData.name,
+    //           Product_Code: formData.code,
+    //           ImageUrls: finalImages.join(","),
+    //           Description: formData.description,
+    //           Unit_Price: formData.price,
+    //         }
+    //       );
+    //       setSuccessMessage("Product Edited successfully !!!");
+    //       setShowSuccessModal(true);
+    //     } catch (error) {
+    //       console.error("Error in Edit Product:", error);
+    //       setSuccessMessage("Error occured while editing product");
+    //       setShowFailureModal(true);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   }
 
-        const finalImages = originalImages
-          .filter((img) => !removedImages.includes(img))
-          .concat(uploadedImageUrls);
-        setOriginalImages(finalImages);
-
-        try {
-          await axios.put(
-            `${BASE_URL}/server/zylker_eclassifieds_routes_handler/crmProduct/${id}`,
-            {
-              Product_Name: formData.name,
-              Product_Code: formData.code,
-              ImageUrls: finalImages.join(","),
-              Description: formData.description,
-              Unit_Price: formData.price,
-            }
-          );
-          setSuccessMessage("Product Edited successfully !!!");
-          setShowSuccessModal(true);
-        } catch (error) {
-          console.error("Error in Edit Product:", error);
-          setSuccessMessage("Error occured while editing product");
-          setShowFailureModal(true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      setTimeout(() => {
-        navigate("/seller/dashboard");
-      }, 2000);
-    } catch (error) {
-      console.log(`Error occured while editing - ${error}`);
-    }
+    //   // After successful create/edit, navigate to seller dashboard
+    //   setTimeout(() => {
+    //     navigate("/seller/dashboard");
+    //   }, 2000);
+    // } catch (error) {
+    //   console.log(`Error occured while editing - ${error}`);
+    // }
   };
 
+  // Function to handle the deletion of a product
   const handleDelete = async () => {
     setIsLoading(true);
     try {
+      // Make DELETE request to remove the product from CRM
       await axios.delete(
         `${BASE_URL}/server/zylker_eclassifieds_routes_handler/crmProduct/${id}`,
         {
